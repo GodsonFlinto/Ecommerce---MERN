@@ -4,8 +4,8 @@ const catchAsyncError = require("../middlewares/catchAsyncError");
 const APIFeatures = require("../utils/apiFeatures");
 
 //Get Products - /api/v1/products
-exports.getProducts = async (req, res) => {
-    const resPerPage = 2
+exports.getProducts = async (req, res, next) => {
+    const resPerPage = 4
   const apiFeatures = new APIFeatures(Product.find(), req.query)
     .search()
     .filter()
@@ -35,6 +35,7 @@ exports.getSingleProduct = async (req, res, next) => {
   if (!product) {
     return next(new ErrorHandler("Product not found", 400));
   }
+  await new Promise(resolve => setTimeout(resolve,1000))
   res.status(200).json({
     success: true,
     product,
