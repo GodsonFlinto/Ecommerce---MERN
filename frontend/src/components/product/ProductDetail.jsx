@@ -1,11 +1,12 @@
 import React, { Fragment, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getProduct } from "../../actions/productActions";
+import { getProduct } from "../../actions/productsActions";
 import Loader from "../layouts/Loader";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
+import MetaData from "../layouts/MetaData";
 
 const ProductDetail = () => {
   const dispatch = useDispatch();
@@ -18,7 +19,7 @@ const ProductDetail = () => {
 
   useEffect(() => {
     dispatch(getProduct(id));
-  }, [id]);
+  }, [id, dispatch]);
 
   // if (!product?.images) return <p>No product found</p>; // handles undefined
 
@@ -38,6 +39,7 @@ const ProductDetail = () => {
         <Loader />
       ) : (
         <Fragment>
+          <MetaData title={product.name}/>
           <div className="row f-flex justify-content-around">
             <div className="col-12 col-lg-5 img-fluid" id="product_image">
               <Slider {...settings}>

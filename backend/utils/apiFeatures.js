@@ -37,7 +37,7 @@ class APIFeatures{
         }
     }
 
-    console.log("Formatted Query:", queryStr);
+    //console.log("Formatted Query:", queryStr);
 
     this.query.find(queryStr);
     return this;
