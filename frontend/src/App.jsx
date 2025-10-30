@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import Header from "./components/layouts/Header";
 import Footer from "./components/layouts/Footer";
@@ -9,9 +9,19 @@ import "react-toastify/dist/ReactToastify.css";
 import ProductDetail from "./components/product/ProductDetail";
 import { HelmetProvider } from "react-helmet-async";
 import ProductSearch from "./components/product/ProductSearch";
+import Login from "./components/user/login";
+import Register from "./components/user/Register";
+import store from './store'
+import { loadUser } from "./actions/userActions";
+import { useDispatch } from "react-redux";
+import Profile from "./components/user/Profile";
+import ProtectedRoute from "./components/route/ProtectedRoute";
 
 function App() {
-  const [count, setCount] = useState(0);
+
+  useEffect(()=>{
+    store.dispatch(loadUser)
+  },[])
 
   return (
     <>
@@ -24,7 +34,10 @@ function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/product/:id" element={<ProductDetail />} />
-                <Route path="/search/:keyword" element={<ProductSearch />}/>
+                <Route path="/search/:keyword" element={<ProductSearch />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/myprofile" element={<ProtectedRoute><Profile/></ProtectedRoute>}/>
               </Routes>
             </div>
             <Footer />
