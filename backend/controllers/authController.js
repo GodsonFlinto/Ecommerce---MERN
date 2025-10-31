@@ -154,9 +154,14 @@ exports.changePassword = catchAsyncError( async ( req, res, next) => {
 
 //Update profile - /api/v1/update
 exports.updateProfile = catchAsyncError(async(req, res, next)=>{
-    const newUserData = {
+    let newUserData = {
         name : req.body.name,
         email : req.body.email
+    }
+    let avatar
+    if(req.file){
+        avatar = `${req.protocol}://${req.host}/uploads/user/${req.file.originalname}`
+        newUserData = {...newUserData, avatar}
     }
 
     const user = await User.findByIdAndUpdate(req.user.id, newUserData, {

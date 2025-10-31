@@ -67,7 +67,7 @@ const Login = () => {
                 type="password"
                 id="password_field"
                 className="form-control"
-                autoComplete="curren-password"
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
