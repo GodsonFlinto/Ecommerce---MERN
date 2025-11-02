@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { clearAuthError, updateProfile } from "../../actions/userActions";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const UpdateProfile = () => {
   const { loading, error, user, isUpdated } = useSelector(
     (state) => state.authState
   );
 
+  const navigate = useNavigate()
   const dispatch = useDispatch()
 
   const [name, setName] = useState("");
@@ -58,6 +60,7 @@ const UpdateProfile = () => {
         type: "success",
         position: "bottom-center",
       });
+      navigate('/myprofile')
       return;
     }
     if (error) {

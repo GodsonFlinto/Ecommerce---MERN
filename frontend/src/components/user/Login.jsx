@@ -56,6 +56,7 @@ const Login = () => {
                 type="email"
                 id="email_field"
                 className="form-control"
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -73,9 +74,9 @@ const Login = () => {
               />
             </div>
 
-            <a href="#" className="float-right mb-4">
+            <Link to="/password/forgot" className="float-right mb-4">
               Forgot Password?
-            </a>
+            </Link>
 
             <button
               id="login_button"

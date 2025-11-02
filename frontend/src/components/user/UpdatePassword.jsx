@@ -60,6 +60,7 @@ const UpdatePassword = () => {
                                 autoComplete='current-password'
                                 value={oldPassword}
                                 onChange={e=>setOldPassword(e.target.value)}
+                                hidden
                             />
                         </div>
 

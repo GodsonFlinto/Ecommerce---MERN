@@ -1,5 +1,5 @@
 import axios from "axios"
-import { clearError, loadUserFail, loadUserRequest, loadUserSuccess, loginFail, loginRequest, loginSuccess, logoutFail, logoutSuccess, registerFail, registerRequest, registerSuccess, updatePasswordFail, updatePasswordRequest, updatePasswordSuccess, updateProfileFail, updateProfileRequest, updateProfileSuccess } from "../slices/authSlice"
+import { clearError, forgotPasswordFail, forgotPasswordRequest, forgotPasswordSuccess, loadUserFail, loadUserRequest, loadUserSuccess, loginFail, loginRequest, loginSuccess, logoutFail, logoutSuccess, registerFail, registerRequest, registerSuccess, resetPasswordFail, resetPasswordRequest, resetPasswordSuccess, updatePasswordFail, updatePasswordRequest, updatePasswordSuccess, updateProfileFail, updateProfileRequest, updateProfileSuccess } from "../slices/authSlice"
 
 export const login = (email, password) => async (dispatch) => {
     try {
@@ -82,5 +82,37 @@ export const updatePassword = (formData) => async (dispatch) => {
         dispatch(updatePasswordSuccess())
     } catch (error) {
         dispatch(updatePasswordFail(error.response.data.message))
+    }
+}
+
+export const forgotPassword = (email) => async (dispatch) => {
+    
+    try {
+        dispatch(forgotPasswordRequest())
+        const config = {
+            headers : {
+                'Content-type' : 'application/json'
+            }
+        }
+        const {data} = await axios.post(`/api/v1/password/forgot`, {email}, config)
+        dispatch(forgotPasswordSuccess({ message : data.message }))
+    } catch (error) {
+        dispatch(forgotPasswordFail(error.response?.data?.message))
+    }
+}
+
+export const resetPassword = (password, confirmPassword, token) => async (dispatch) => {
+    
+    try {
+        dispatch(resetPasswordRequest())
+        const config = {
+            headers : {
+                'Content-type' : 'application/json'
+            }
+        }
+        const {data} = await axios.put(`/api/v1/password/reset/${token}`, { password, confirmPassword }, config)
+        dispatch(resetPasswordSuccess(data))
+    } catch (error) {
+        dispatch(resetPasswordFail(error.response.data.message))
     }
 }
