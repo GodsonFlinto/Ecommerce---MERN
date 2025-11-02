@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { useSelector } from 'react-redux'
 import Loader from '../layouts/Loader'
 import { Link } from 'react-router-dom'
+import MetaData from '../layouts/MetaData'
 
 const Profile = () => {
     const {user, loading} = useSelector(state=>state.authState)
@@ -10,7 +11,9 @@ const Profile = () => {
         return<Loader/>
     }
   return (
-    <div className="row justify-content-around mt-5 user-info">
+    <Fragment>
+        <MetaData title={`Profile`} />
+        <div className="row justify-content-around mt-5 user-info">
             <div className="col-12 col-md-3">
                 <figure className='avatar avatar-profile'>
                     <img className="rounded-circle img-fluid" src={user?.avatar || './images/default_avatar.png'} alt='' />
@@ -30,15 +33,17 @@ const Profile = () => {
                  <h4>Joined</h4>
                  <p>{String(user?.createdAt).substring(0,10)}</p>
 
-                 <a href="#" className="btn btn-danger btn-block mt-5">
+                 <Link href="" className="btn btn-danger btn-block mt-5">
                     My Orders
-                </a>
+                </Link>
 
                 <Link to="/myprofile/update/password" className="btn btn-primary btn-block mt-3">
                     Change Password
                 </Link>
             </div>
         </div>
+    </Fragment>
+    
   )
 }
 

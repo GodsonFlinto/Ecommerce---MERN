@@ -19,6 +19,10 @@ import UpdateProfile from "./components/user/UpdateProfile";
 import UpdatePassword from "./components/user/UpdatePassword";
 import ForgotPassword from "./components/user/ForgotPassword";
 import ResetPassword from "./components/user/ResetPassword";
+import Cart from "./components/cart/Cart";
+import Shipping from "./components/cart/Shipping";
+import ConfirmOrder from "./components/cart/ConfirmOrder";
+import Payment from "./components/cart/Payment";
 
 function App() {
 
@@ -45,6 +49,11 @@ function App() {
                 <Route path="/myprofile/update/password" element={<ProtectedRoute> <UpdatePassword/> </ProtectedRoute>}/>
                 <Route path="/password/forgot" element={<ForgotPassword/>}/>
                 <Route path="/password/reset/:token" element={<ResetPassword/>}/>
+                <Route path="/cart" element={<Cart/>} />
+                <Route path="/shipping" element={<ProtectedRoute><Shipping/></ProtectedRoute>} />
+                <Route path="/order/confirm" element={<ProtectedRoute><ConfirmOrder/></ProtectedRoute>} />
+                <Route path="/payment" element={<ProtectedRoute><Payment/></ProtectedRoute>} />
+
               </Routes>
             </div>
             <Footer />

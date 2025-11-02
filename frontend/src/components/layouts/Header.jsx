@@ -7,11 +7,13 @@ import { logout } from "../../actions/userActions";
 
 const Header = () => {
   const { isAuthenticated, user } = useSelector((state) => state.authState);
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const { items : cartItems } = useSelector((state) => state.cartState);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const logoutHandler = () => {
-    dispatch(logout)
-  }
+    dispatch(logout);
+  };
   return (
     <>
       <nav className="navbar row">
@@ -29,21 +31,34 @@ const Header = () => {
 
         <div className="col-12 col-md-3 mt-4 mt-md-0 text-center">
           {isAuthenticated ? (
-            (
-              <Dropdown className="d-inline">
-                <Dropdown.Toggle variant="default text-white pr-5" id="dropdowm-basic">
+            <Dropdown className="d-inline">
+              <Dropdown.Toggle
+                variant="default text-white pr-5"
+                id="dropdowm-basic"
+              >
                 <Figure className="avatar avatar-nav">
-                  <Image width="50px" src={user.avatar ?? './images/default_avatar.png'} roundedCircle/>
+                  <Image
+                    width="50px"
+                    src={user.avatar ?? "./images/default_avatar.png"}
+                    roundedCircle
+                  />
                 </Figure>
                 <span>{user.name}</span>
-
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <Dropdown.Item onClick={()=>{navigate('/myprofile')}} className="text-dark">Profile</Dropdown.Item>
-                  <Dropdown.Item onClick={logoutHandler} className="text-danger">LogOut</Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            )
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item
+                  onClick={() => {
+                    navigate("/myprofile");
+                  }}
+                  className="text-dark"
+                >
+                  Profile
+                </Dropdown.Item>
+                <Dropdown.Item onClick={logoutHandler} className="text-danger">
+                  LogOut
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
           ) : (
             <Link to="/login">
               <button className="btn" id="login_btn">
@@ -52,11 +67,14 @@ const Header = () => {
             </Link>
           )}
 
-          <span id="cart" className="ml-3">
-            Cart
-          </span>
+          <Link to="/cart">
+            {" "}
+            <span id="cart" className="ml-3">
+              Cart
+            </span>{" "}
+          </Link>
           <span className="ml-1" id="cart_count">
-            2
+            {cartItems.length}
           </span>
         </div>
       </nav>

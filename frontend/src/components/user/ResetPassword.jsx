@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { clearAuthError, resetPassword } from "../../actions/userActions";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import MetaData from "../layouts/MetaData";
 
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
@@ -40,7 +41,9 @@ const ResetPassword = () => {
   }, [dispatch, isAuthenticated, error, navigate]);
 
   return (
-    <div className="row wrapper">
+    <Fragment>
+        <MetaData title={`Reset Password`} />
+         <div className="row wrapper">
       <div className="col-10 col-lg-5">
         <form onSubmit={submitHandler} className="shadow-lg">
           <h1 className="mb-3">New Password</h1>
@@ -79,6 +82,8 @@ const ResetPassword = () => {
         </form>
       </div>
     </div>
+    </Fragment>
+   
   );
 };
 

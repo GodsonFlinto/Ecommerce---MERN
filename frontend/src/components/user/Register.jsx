@@ -126,7 +126,7 @@ const Register = () => {
                     <img
                       src={avatarPreview}
                       className="rounded-circle"
-                      alt="image"
+                      alt="Avatar"
                     />
                   </figure>
                 </div>
