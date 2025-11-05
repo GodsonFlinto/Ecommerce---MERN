@@ -54,6 +54,14 @@ const Header = () => {
                 >
                   Profile
                 </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    navigate("/orders");
+                  }}
+                  className="text-dark"
+                >
+                  Orders
+                </Dropdown.Item>
                 <Dropdown.Item onClick={logoutHandler} className="text-danger">
                   LogOut
                 </Dropdown.Item>

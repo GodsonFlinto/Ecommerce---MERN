@@ -7,9 +7,9 @@ const cartSlice = createSlice({
       ? JSON.parse(localStorage.getItem("cartItems"))
       : [],
     loading: false,
-    shippingInfo : localStorage.getItem("shippingInfo")
+    shippingInfo: localStorage.getItem("shippingInfo")
       ? JSON.parse(localStorage.getItem("shippingInfo"))
-      : {}
+      : {},
   },
   reducers: {
     addCartItemRequest(state, action) {
@@ -54,37 +54,48 @@ const cartSlice = createSlice({
       });
       localStorage.setItem("cartItems", JSON.stringify(state.items));
     },
-    removeItemFromCart(state, action){
-        const filterItems = state.items.filter(item => {
-            return item.product !== action.payload
-        })
+    removeItemFromCart(state, action) {
+      const filterItems = state.items.filter((item) => {
+        return item.product !== action.payload;
+      });
 
-        localStorage.setItem("cartItems", JSON.stringify(filterItems));
+      localStorage.setItem("cartItems", JSON.stringify(filterItems));
 
-        return{
-            ...state,
-            items : filterItems
-        }
+      return {
+        ...state,
+        items: filterItems,
+      };
     },
-    saveShippingInfo(state, action){
-        localStorage.setItem("shippingInfo", JSON.stringify(action.payload));
-        return{
-            ...state,
-            shippingInfo : action.payload
-        }
+    saveShippingInfo(state, action) {
+      localStorage.setItem("shippingInfo", JSON.stringify(action.payload));
+      return {
+        ...state,
+        shippingInfo: action.payload,
+      };
+    },
+    orderCompleted(state, action) {
+      localStorage.removeItem("shippingInfo");
+      localStorage.removeItem("cartItems");
+      sessionStorage.removeItem("orderInfo");
+      return {
+        items: [],
+        loading: false,
+        shippingInfo: {},
+      };
     },
   },
 });
 
 const { actions, reducer } = cartSlice;
 
-export const { 
-    addCartItemRequest,
-    addCartItemSuccess,
-    increaseCartItemQty,
-    decreaseCartItemQty,
-    removeItemFromCart,
-    saveShippingInfo
+export const {
+  addCartItemRequest,
+  addCartItemSuccess,
+  increaseCartItemQty,
+  decreaseCartItemQty,
+  removeItemFromCart,
+  saveShippingInfo,
+  orderCompleted
 } = actions;
 
 export default reducer;
