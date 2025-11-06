@@ -1,21 +1,29 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getProduct } from "../../actions/productsActions";
+import { createReview, getProduct } from "../../actions/productsActions";
 import Loader from "../layouts/Loader";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import MetaData from "../layouts/MetaData";
 import { addCartItem } from "../../actions/cartActions";
+import { Modal } from "react-bootstrap";
+import { clearError, clearProduct, clearReviewSubmitted } from "../../slices/productSlice";
+import { toast } from "react-toastify";
+import ProductReview from "./ProductReview";
 
 const ProductDetail = () => {
   const dispatch = useDispatch();
 
   const { id } = useParams();
 
-  const { loading, product, error } = useSelector(
+  const { loading, product = {}, isReviewSubmitted, error } = useSelector(
     (state) => state.productState
+  );
+  
+  const { user } = useSelector(
+    (state) => state.authState
   );
 
   const [quantity, setQuantity] = useState(1);
@@ -34,9 +42,48 @@ const ProductDetail = () => {
     setQuantity(qty);
   };
 
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const [rating, setRating] = useState(1);
+  const [comment, setComment] = useState("");
+
+  const reviewHandler = (e) => {
+    const data = {rating, comment, productId : id }
+    dispatch(createReview(data));
+  };
+
   useEffect(() => {
-    dispatch(getProduct(id));
-  }, [id, dispatch]);
+    if (isReviewSubmitted) {
+      handleClose();
+      toast("Review Submitted Successfully", {
+        type: "success",
+        position: "bottom-center",
+        onOpen: () => dispatch(clearReviewSubmitted()),
+      });
+    }
+    if (error) {
+      toast(error, {
+        position: "bottom-center",
+        type: "error",
+        onOpen: () => {
+          dispatch(clearError());
+        },
+      });
+      return;
+    }
+    if(!product._id || isReviewSubmitted){
+      dispatch(getProduct(id));
+    }
+
+    return ()=>{
+      dispatch(clearProduct())
+    }
+
+    
+  }, [id, dispatch, isReviewSubmitted, error]);
 
   // if (!product?.images) return <p>No product found</p>; // handles undefined
 
@@ -116,7 +163,7 @@ const ProductDetail = () => {
                 id="cart_btn"
                 disabled={product.stock == 0 ? true : false}
                 className="btn btn-primary d-inline ml-4"
-                onClick={()=>dispatch(addCartItem(product._id, quantity))}
+                onClick={() => dispatch(addCartItem(product._id, quantity))}
               >
                 Add to Cart
               </button>
@@ -142,81 +189,70 @@ const ProductDetail = () => {
                 Sold by: <strong>{product.seller}</strong>
               </p>
 
-              <button
+                  {
+                    user ?
+                    <button
                 id="review_btn"
                 type="button"
                 className="btn btn-primary mt-4"
                 data-toggle="modal"
                 data-target="#ratingModal"
+                onClick={handleShow}
               >
                 Submit Your Review
-              </button>
+              </button> :
+              <div className="alert alert-danger mt-5">Login to Post Review</div>
+                  }
+              
 
               <div className="row mt-2 mb-5">
                 <div className="rating w-50">
-                  <div
-                    className="modal fade"
-                    id="ratingModal"
-                    tabIndex="-1"
-                    role="dialog"
-                    aria-labelledby="ratingModalLabel"
-                    aria-hidden="true"
-                  >
-                    <div className="modal-dialog" role="document">
-                      <div className="modal-content">
-                        <div className="modal-header">
-                          <h5 className="modal-title" id="ratingModalLabel">
-                            Submit Review
-                          </h5>
-                          <button
-                            type="button"
-                            className="close"
-                            data-dismiss="modal"
-                            aria-label="Close"
+                  <Modal show={show} onHide={handleClose}>
+                    <Modal.Header closeButton>
+                      <Modal.Title>Submit Review</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                      <ul className="stars">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <li
+                          key={star}
+                            value={star}
+                            onClick={() => setRating(star)}
+                            className={`star ${star <= rating ? "orange" : ""}`}
+                            onMouseOver={(e) =>
+                              e.target.classList.add("yellow")
+                            }
+                            onMouseOut={(e) =>
+                              e.target.classList.remove("yellow")
+                            }
                           >
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        <div className="modal-body">
-                          <ul className="stars">
-                            <li className="star">
-                              <i className="fa fa-star"></i>
-                            </li>
-                            <li className="star">
-                              <i className="fa fa-star"></i>
-                            </li>
-                            <li className="star">
-                              <i className="fa fa-star"></i>
-                            </li>
-                            <li className="star">
-                              <i className="fa fa-star"></i>
-                            </li>
-                            <li className="star">
-                              <i className="fa fa-star"></i>
-                            </li>
-                          </ul>
-
-                          <textarea
-                            name="review"
-                            id="review"
-                            className="form-control mt-3"
-                          ></textarea>
-
-                          <button
-                            className="btn my-3 float-right review-btn px-4 text-white"
-                            data-dismiss="modal"
-                            aria-label="Close"
-                          >
-                            Submit
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                            <i className="fa fa-star"></i>
+                          </li>
+                        ))}
+                      </ul>
+                      <textarea
+                        name="review"
+                        id="review"
+                        className="form-control mt-3"
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                      ></textarea>
+                      <button
+                        disabled={loading}
+                        onClick={reviewHandler}
+                        aria-label="Close"
+                        className="btn my-3 float-right review-btn px-4 text-white"
+                      >
+                        Submit
+                      </button>
+                    </Modal.Body>
+                  </Modal>
                 </div>
               </div>
             </div>
           </div>
+
+          {product.reviews && product.reviews.length>0 ? <ProductReview reviews={product.reviews} /> : null}
         </Fragment>
       )}
     </Fragment>
