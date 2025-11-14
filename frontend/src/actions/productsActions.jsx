@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { productsFail, productsRequest, productsSuccess } from '../slices/productsSlice'
+import { adminProductsFail, adminProductsRequest, adminProductsSuccess, productsFail, productsRequest, productsSuccess } from '../slices/productsSlice'
 import {productRequest, productSuccess, productFail, createReviewRequest, createReviewSuccess, createReviewFail } from "../slices/productSlice"
 
 export const getProducts = (keyword, price, category, rating, page) => async(dispatch) => {
@@ -51,5 +51,16 @@ export const createReview = (reviewData) => async (dispatch) => {
         dispatch(createReviewSuccess(data))
     } catch (error) {
         dispatch(createReviewFail(error.response.data.message))
+    }
+}
+
+export const getAdminProducts = () => async(dispatch) => {
+    try {
+        dispatch(adminProductsRequest())
+        const { data } = await axios.get(`/api/v1/admin/products`)
+        dispatch(adminProductsSuccess(data))
+    } catch (error) {
+        //handle error
+        dispatch(adminProductsFail(error.response.data.message))
     }
 }

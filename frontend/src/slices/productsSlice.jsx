@@ -24,12 +24,35 @@ const productsSlice = createSlice({
                 loading : false,
                 error : action.payload
             }
+        },
+        adminProductsRequest(state, action){
+            return {
+                loading : true
+            }
+        },
+        adminProductsSuccess(state, action){
+            return{
+                loading : false,
+                products : action.payload.products,
+            }
+        },
+        adminProductsFail(state, action){
+            return{
+                loading : false,
+                error : action.payload
+            }
+        },
+        clearError(state, action){
+            return {
+                loading : false,
+                error : action.payload
+            }
         }
     }
 })
 
 const {actions, reducer} = productsSlice
 
-export const{productsSuccess, productsFail, productsRequest} = actions
+export const{productsSuccess, productsFail, productsRequest, adminProductsFail, adminProductsRequest, adminProductsSuccess, clearError} = actions
 
 export default reducer

@@ -7,7 +7,7 @@ import { logout } from "../../actions/userActions";
 
 const Header = () => {
   const { isAuthenticated, user } = useSelector((state) => state.authState);
-  const { items : cartItems } = useSelector((state) => state.cartState);
+  const { items: cartItems } = useSelector((state) => state.cartState);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -46,6 +46,16 @@ const Header = () => {
                 <span>{user.name}</span>
               </Dropdown.Toggle>
               <Dropdown.Menu>
+                {user.role === 'admin' && (
+                  <Dropdown.Item
+                    onClick={() => {
+                      navigate("/admin/dashboard");
+                    }}
+                    className="text-dark"
+                  >
+                    Dashboard
+                  </Dropdown.Item>
+                )}
                 <Dropdown.Item
                   onClick={() => {
                     navigate("/myprofile");
