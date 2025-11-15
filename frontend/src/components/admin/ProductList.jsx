@@ -50,6 +50,7 @@ const ProductList = () => {
           >
             <i className="fa fa-pencil"></i>
           </Link>
+
           <Button className="btn btn-danger ml-2">
             <i className="fa fa-trash"></i>
           </Button>
@@ -58,7 +59,6 @@ const ProductList = () => {
     },
   ];
 
-  // 🔍 Filter products by name
   const filteredProducts = products?.filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase())
   );
@@ -72,7 +72,7 @@ const ProductList = () => {
       return;
     }
 
-    dispatch(getAdminProducts);
+    dispatch(getAdminProducts());
   }, [dispatch, error]);
 
   return (
@@ -97,6 +97,7 @@ const ProductList = () => {
                 enterButton
                 size="large"
                 style={{ marginBottom: 20, maxWidth: "300px" }}
+                value={search}
                 onSearch={(value) => setSearch(value)}
                 onChange={(e) => setSearch(e.target.value)}
               />

@@ -18,7 +18,7 @@ const Sidebar = () => {
                             <i className='fa fa-product-hunt'> Product</i>
                         }>
                            <NavDropdown.Item onClick={()=>navigate('/admin/products')}> <i className='fa fa-shopping-basket'> All</i> </NavDropdown.Item>
-                           <NavDropdown.Item onClick={()=>navigate('/admin/products')}> <i className='fa fa-plus'> Create</i> </NavDropdown.Item> 
+                           <NavDropdown.Item onClick={()=>navigate('/admin/products/create')}> <i className='fa fa-plus'> Create</i> </NavDropdown.Item> 
                         </NavDropdown>
                     </li>
 
