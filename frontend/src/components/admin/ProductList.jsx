@@ -125,6 +125,7 @@ const ProductList = () => {
                 rowKey="_id"
                 bordered
                 pagination
+                
               />
             </>
           )}
