@@ -3,7 +3,7 @@ import MetaData from "../layouts/MetaData";
 import Sidebar from "./Sidebar";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { createNewProduct } from "../../actions/productsActions";
+import { createNewProduct, getAdminProducts } from "../../actions/productsActions";
 import { toast } from "react-toastify";
 import { clearProductCreated } from "../../slices/productSlice";
 import { clearError } from "../../slices/productsSlice";
@@ -81,6 +81,7 @@ const NewProduct = () => {
               });
         
               navigate("/admin/products");
+              dispatch(getAdminProducts())
               return;
     }
     if (error) {

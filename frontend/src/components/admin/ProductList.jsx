@@ -4,10 +4,10 @@ import Sidebar from "./Sidebar";
 import Loader from "../layouts/Loader";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { clearError } from "../../slices/productSlice";
+import { clearError, clearProductDeleted } from "../../slices/productSlice";
 import { Table, Button, Input } from "antd";
 import { Link } from "react-router-dom";
-import { getAdminProducts } from "../../actions/productsActions";
+import { deleteProduct, getAdminProducts } from "../../actions/productsActions";
 
 const ProductList = () => {
   const dispatch = useDispatch();
@@ -15,6 +15,9 @@ const ProductList = () => {
 
   const { products = [], loading, error } = useSelector(
     (state) => state.productsState
+  );
+  const { error : productError, isProductDeleted } = useSelector(
+    (state) => state.productState
   );
 
   const columns = [
@@ -51,7 +54,7 @@ const ProductList = () => {
             <i className="fa fa-pencil"></i>
           </Link>
 
-          <Button className="btn btn-danger ml-2">
+          <Button onClick={e => deleteHandler(e, product._id)} className="btn btn-danger ml-2">
             <i className="fa fa-trash"></i>
           </Button>
         </Fragment>
@@ -63,17 +66,31 @@ const ProductList = () => {
     item.name.toLowerCase().includes(search.toLowerCase())
   );
 
+  const deleteHandler = (e, id) => {
+    e.target.disabled = true
+    dispatch(deleteProduct(id))
+  }
+
   useEffect(() => {
-    if (error) {
+    if (error || productError) {
       toast.error(error, {
         position: "bottom-center",
         onOpen: () => dispatch(clearError()),
       });
       return;
     }
+    if(isProductDeleted){
+      toast("Product Deleted Successfully", {
+        type: "success",
+        position: "bottom-center",
+        onOpen: () => dispatch(clearProductDeleted()),
+      });
+      return;
+    }
+    
 
     dispatch(getAdminProducts());
-  }, [dispatch, error]);
+  }, [dispatch, error, isProductDeleted]);
 
   return (
     <Fragment>
