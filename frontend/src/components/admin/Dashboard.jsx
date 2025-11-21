@@ -65,12 +65,12 @@ const Dashboard = () => {
                                         <div className="card-body">
                                             <div className="text-center card-font-size">Orders<br /> <b>345</b></div>
                                         </div>
-                                        <a className="card-footer text-white clearfix small z-1" to="/admin/orders">
+                                        <Link className="card-footer text-white clearfix small z-1" to="/admin/orders">
                                             <span className="float-left">View Details</span>
                                             <span className="float-right">
                                                 <i className="fa fa-angle-right"></i>
                                             </span>
-                                        </a>
+                                        </Link>
                                     </div>
                                 </div>
 
@@ -80,12 +80,12 @@ const Dashboard = () => {
                                         <div className="card-body">
                                             <div className="text-center card-font-size">Users<br /> <b>55</b></div>
                                         </div>
-                                        <a className="card-footer text-white clearfix small z-1" href="/admin/users">
+                                        <Link className="card-footer text-white clearfix small z-1" to="/admin/users">
                                             <span className="float-left">View Details</span>
                                             <span className="float-right">
                                                 <i className="fa fa-angle-right"></i>
                                             </span>
-                                        </a>
+                                        </Link>
                                     </div>
                                 </div>
 

@@ -5,7 +5,10 @@ const orderSlice = createSlice({
   initialState: {
     orderDetail : {},
     userOrders : [],
-    loading : false
+    adminOrders : [],
+    loading : false,
+    isOrderDeleted : false,
+    isOrderUpdated : false
   },
   reducers: {
     createOrderRequest(state, action){
@@ -74,6 +77,78 @@ const orderSlice = createSlice({
             error : action.payload
         }
     },
+    adminOrderRequest(state, action){
+        return{
+            ...state,
+            loading : true,
+        }
+    },
+    adminOrderSuccess(state, action){
+        return{
+            ...state,
+            loading : false,
+            adminOrders : action.payload.orders
+        }
+    },
+    adminOrderFail(state, action){
+        return{
+            ...state,
+            loading : false,
+            error : action.payload
+        }
+    },
+    deleteOrderRequest(state, action){
+        return{
+            ...state,
+            loading : true,
+        }
+    },
+    deleteOrderSuccess(state, action){
+        return{
+            ...state,
+            loading : false,
+            isOrderDeleted : true
+        }
+    },
+    deleteOrderFail(state, action){
+        return{
+            ...state,
+            loading : false,
+            error : action.payload
+        }
+    },
+    updateOrderRequest(state, action){
+        return{
+            ...state,
+            loading : true,
+        }
+    },
+    updateOrderSuccess(state, action){
+        return{
+            ...state,
+            loading : false,
+            isOrderUpdated : true
+        }
+    },
+    updateOrderFail(state, action){
+        return{
+            ...state,
+            loading : false,
+            error : action.payload
+        }
+    },
+    clearOrderDeleted(state, action){
+        return{
+            ...state,
+            isOrderDeleted : false
+        }
+    },
+    clearOrderUpdated(state, action){
+        return{
+            ...state,
+            isOrderUpdated : false
+        }
+    }
   },
 });
 
@@ -89,7 +164,18 @@ export const {
   userOrderSuccess,
   orderDetailFail,
   orderDetailRequest,
-  orderDetailSuccess
+  orderDetailSuccess,
+  adminOrderFail,
+  adminOrderSuccess,
+  adminOrderRequest,
+  deleteOrderFail,
+  deleteOrderRequest,
+  deleteOrderSuccess,
+  updateOrderFail,
+  updateOrderRequest,
+  updateOrderSuccess,
+  clearOrderDeleted,
+  clearOrderUpdated
 } = actions;
 
 export default reducer;

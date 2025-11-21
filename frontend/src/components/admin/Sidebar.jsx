@@ -23,15 +23,15 @@ const Sidebar = () => {
                     </li>
 
                     <li>
-                        <Link href="/admin/orders"><i className="fa fa-shopping-basket"></i> Orders</Link>
+                        <Link to="/admin/orders"><i className="fa fa-shopping-basket"></i> Orders</Link>
                     </li>
 
                     <li>
-                        <Link href="/admin/users"><i className="fa fa-users"></i> Users</Link>
+                        <Link to="/admin/users"><i className="fa fa-users"></i> Users</Link>
                     </li>
 
                     <li>
-                        <Link href="/admin/reviews"><i className="fa fa-users"></i> Reviews</Link>
+                        <Link to="/admin/reviews"><i className="fa fa-users"></i> Reviews</Link>
                     </li>
             
                 </ul>
