@@ -9,7 +9,11 @@ import Slider from "react-slick";
 import MetaData from "../layouts/MetaData";
 import { addCartItem } from "../../actions/cartActions";
 import { Modal } from "react-bootstrap";
-import { clearError, clearProduct, clearReviewSubmitted } from "../../slices/productSlice";
+import {
+  clearError,
+  clearProduct,
+  clearReviewSubmitted,
+} from "../../slices/productSlice";
 import { toast } from "react-toastify";
 import ProductReview from "./ProductReview";
 
@@ -18,13 +22,14 @@ const ProductDetail = () => {
 
   const { id } = useParams();
 
-  const { loading, product = {}, isReviewSubmitted, error } = useSelector(
-    (state) => state.productState
-  );
-  
-  const { user } = useSelector(
-    (state) => state.authState
-  );
+  const {
+    loading,
+    product = {},
+    isReviewSubmitted,
+    error,
+  } = useSelector((state) => state.productState);
+
+  const { user } = useSelector((state) => state.authState);
 
   const [quantity, setQuantity] = useState(1);
 
@@ -51,7 +56,7 @@ const ProductDetail = () => {
   const [comment, setComment] = useState("");
 
   const reviewHandler = (e) => {
-    const data = {rating, comment, productId : id }
+    const data = { rating, comment, productId: id };
     dispatch(createReview(data));
   };
 
@@ -74,15 +79,13 @@ const ProductDetail = () => {
       });
       return;
     }
-    if(!product._id || isReviewSubmitted){
+    if (!product._id || isReviewSubmitted) {
       dispatch(getProduct(id));
     }
 
-    return ()=>{
-      dispatch(clearProduct())
-    }
-
-    
+    return () => {
+      dispatch(clearProduct());
+    };
   }, [id, dispatch, isReviewSubmitted, error]);
 
   // if (!product?.images) return <p>No product found</p>; // handles undefined
@@ -163,7 +166,13 @@ const ProductDetail = () => {
                 id="cart_btn"
                 disabled={product.stock == 0 ? true : false}
                 className="btn btn-primary d-inline ml-4"
-                onClick={() => dispatch(addCartItem(product._id, quantity))}
+                onClick={() => {
+                  dispatch(addCartItem(product._id, quantity));
+                  toast("Item added to Cart!", {
+                    type: "success",
+                    position: "bottom-center",
+                  });
+                }}
               >
                 Add to Cart
               </button>
@@ -189,21 +198,22 @@ const ProductDetail = () => {
                 Sold by: <strong>{product.seller}</strong>
               </p>
 
-                  {
-                    user ?
-                    <button
-                id="review_btn"
-                type="button"
-                className="btn btn-primary mt-4"
-                data-toggle="modal"
-                data-target="#ratingModal"
-                onClick={handleShow}
-              >
-                Submit Your Review
-              </button> :
-              <div className="alert alert-danger mt-5">Login to Post Review</div>
-                  }
-              
+              {user ? (
+                <button
+                  id="review_btn"
+                  type="button"
+                  className="btn btn-primary mt-4"
+                  data-toggle="modal"
+                  data-target="#ratingModal"
+                  onClick={handleShow}
+                >
+                  Submit Your Review
+                </button>
+              ) : (
+                <div className="alert alert-danger mt-5">
+                  Login to Post Review
+                </div>
+              )}
 
               <div className="row mt-2 mb-5">
                 <div className="rating w-50">
@@ -215,7 +225,7 @@ const ProductDetail = () => {
                       <ul className="stars">
                         {[1, 2, 3, 4, 5].map((star) => (
                           <li
-                          key={star}
+                            key={star}
                             value={star}
                             onClick={() => setRating(star)}
                             className={`star ${star <= rating ? "orange" : ""}`}
@@ -252,7 +262,9 @@ const ProductDetail = () => {
             </div>
           </div>
 
-          {product.reviews && product.reviews.length>0 ? <ProductReview reviews={product.reviews} /> : null}
+          {product.reviews && product.reviews.length > 0 ? (
+            <ProductReview reviews={product.reviews} />
+          ) : null}
         </Fragment>
       )}
     </Fragment>

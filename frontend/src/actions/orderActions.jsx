@@ -1,5 +1,5 @@
 import axios from "axios"
-import { adminOrderFail, adminOrderRequest, adminOrderSuccess, createOrderFail, createOrderRequest, createOrderSuccess, deleteOrderFail, deleteOrderSuccess, orderDetailFail, orderDetailRequest, orderDetailSuccess, updateOrderFail, updateOrderRequest, userOrderFail, userOrderRequest, userOrderSuccess } from "../slices/orderSlice"
+import { adminOrderFail, adminOrderRequest, adminOrderSuccess, createOrderFail, createOrderRequest, createOrderSuccess, deleteOrderFail, deleteOrderRequest, deleteOrderSuccess, orderDetailFail, orderDetailRequest, orderDetailSuccess, updateOrderFail, updateOrderRequest, updateOrderSuccess, userOrderFail, userOrderRequest, userOrderSuccess } from "../slices/orderSlice"
 
 export const createOrder = (order) => async(dispatch) => {
     try {
@@ -51,7 +51,7 @@ export const deleteOrder = (id) => async(dispatch) => {
     }
 }
 
-export const updateteOrder = (id, orderData) => async(dispatch) => {
+export const updateOrder = (id, orderData) => async(dispatch) => {
     try {
         dispatch(updateOrderRequest())
         const {data} = await axios.put(`/api/v1/admin/order/${id}`, orderData)

@@ -98,7 +98,6 @@ const OrderList = () => {
     }
 
     dispatch(adminOrdersAction());
-      console.log("Admin Orders From Redux:", adminOrders);
 
   }, [dispatch, error, isOrderDeleted]);
 
