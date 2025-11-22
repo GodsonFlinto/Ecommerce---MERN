@@ -14,91 +14,82 @@ const OrderList = () => {
   const dispatch = useDispatch();
   const [search, setSearch] = useState("");
 
-  const {
-    adminOrders = [],
-    loading = true,
-    error,
-    isOrderDeleted
-  } = useSelector((state) => state.orderState);
-
-  // Table columns
-  const columns = [
-  {
-    title: "Order ID",
-    dataIndex: "_id",
-    key: "_id",
-  },
-  {
-    title: "No. of Items",
-    dataIndex: "orderItems",
-    key: "orderItems",
-    render: (items) => items?.length || 0,
-  },
-  {
-    title: "Amount",
-    dataIndex: "totalPrice",
-    key: "totalPrice",
-    render: (v) => `₹${v}`,
-  },
-  {
-    title: "Status",
-    dataIndex: "orderStatus",
-    key: "orderStatus",
-    render: (status) => (
-      <span style={{ color: status === "Delivered" ? "green" : "red" }}>
-        {status}
-      </span>
-    ),
-  },
-  {
-    title: "Actions",
-    key: "actions",
-    render: (_, order) => (
-      <>
-        <Link to={`/admin/order/${order._id}`} className="btn btn-primary">
-          <i className="fa fa-eye" />
-        </Link>
-
-        <Button
-          onClick={(e) => deleteHandler(e, order._id)}
-          className="btn btn-danger ml-2"
-        >
-          <i className="fa fa-trash" />
-        </Button>
-      </>
-    ),
-  },
-];
-
-
-  // Search filter
-  const filteredOrders = adminOrders?.filter((item) =>
-    item._id.toLowerCase().includes(search.toLowerCase())
+  const { adminOrders = [], loading = true, error, isOrderDeleted } = useSelector(
+    (state) => state.orderState
   );
 
-  // Delete order
+  // Delete order handler
   const deleteHandler = (e, id) => {
-    e.target.disabled = true;
+    e.currentTarget.disabled = true; // ensures correct button is disabled
     dispatch(deleteOrder(id));
   };
 
+  // Table columns
+  const columns = [
+    {
+      title: "Order ID",
+      dataIndex: "_id",
+      key: "_id",
+    },
+    {
+      title: "No. of Items",
+      dataIndex: "orderItems",
+      key: "orderItems",
+      render: (items) => items?.length || 0,
+    },
+    {
+      title: "Amount",
+      dataIndex: "totalPrice",
+      key: "totalPrice",
+      render: (v) => `₹${v}`,
+    },
+    {
+      title: "Status",
+      dataIndex: "orderStatus",
+      key: "orderStatus",
+      render: (status) => (
+        <span style={{ color: status === "Delivered" ? "green" : "red" }}>
+          {status}
+        </span>
+      ),
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (_, order) => (
+        <>
+          <Link to={`/admin/order/${order._id}`}>
+            <Button type="primary" style={{ marginRight: 8 }}>
+              <i className="fa fa-eye" />
+            </Button>
+          </Link>
+
+          <Button danger onClick={(e) => deleteHandler(e, order._id)}>
+            <i className="fa fa-trash" />
+          </Button>
+        </>
+      ),
+    },
+  ];
+
+  // Filter orders by search term (ID or status)
+  const filteredOrders = adminOrders?.filter(
+    (order) =>
+      order._id?.toLowerCase().includes(search.toLowerCase()) ||
+      order.orderStatus?.toLowerCase().includes(search.toLowerCase())
+  );
+
+  // Fetch orders & handle errors/deletion
   useEffect(() => {
     if (error) {
-      toast.error(error, {
-        position: "bottom-center",
-        onOpen: () => dispatch(clearError()),
-      });
+      toast.error(error, { position: "bottom-center", onOpen: () => dispatch(clearError()) });
     }
 
     if (isOrderDeleted) {
-      toast.success("Order Deleted Successfully", {
-        position: "bottom-center",
-        onOpen: () => dispatch(clearOrderDeleted()),
-      });
+      toast.success("Order Deleted Successfully", { position: "bottom-center", onOpen: () => dispatch(clearOrderDeleted()) });
     }
 
     dispatch(adminOrdersAction());
-
   }, [dispatch, error, isOrderDeleted]);
 
   return (
@@ -118,11 +109,11 @@ const OrderList = () => {
           ) : (
             <>
               <Input.Search
-                placeholder="Search by Order ID"
+                placeholder="Search by Order ID or Status"
                 allowClear
                 enterButton
                 size="large"
-                style={{ marginBottom: 20, maxWidth: "350px" }}
+                style={{ marginBottom: 20, maxWidth: "400px" }}
                 value={search}
                 onSearch={(value) => setSearch(value)}
                 onChange={(e) => setSearch(e.target.value)}
@@ -133,7 +124,7 @@ const OrderList = () => {
                 dataSource={filteredOrders}
                 rowKey="_id"
                 bordered
-                pagination
+                pagination={{ pageSize: 10 }}
               />
             </>
           )}
