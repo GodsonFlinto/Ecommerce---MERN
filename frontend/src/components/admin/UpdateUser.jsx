@@ -3,157 +3,83 @@ import MetaData from "../layouts/MetaData";
 import Sidebar from "./Sidebar";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  getAdminProducts,
-  getProduct,
-  updateProduct,
-} from "../../actions/productsActions";
 import { toast } from "react-toastify";
-import { clearProductUpdated } from "../../slices/productSlice";
-import { clearError } from "../../slices/productsSlice";
 import Loader from "../layouts/Loader";
+import { getUser, updateUser } from "../../actions/userActions";
+import { clearError, clearUserUpdated } from "../../slices/userSlice";
 
 const UpdateUser = () => {
   const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("");
-  const [stock, setStock] = useState(0);
-  const [seller, setSeller] = useState("");
-  const [images, setImages] = useState([]);
-  const [imagesCleared, setImagesCleared] = useState(false);
-  const [imagesPreview, setImagesPreview] = useState([]);
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState("");
 
-  const { loading, isProductUpdated, error, product } = useSelector(
-    (state) => state.productState
+  const { id: userId } = useParams();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { loading, isUserUpdated, error, user } = useSelector(
+    (state) => state.userState
   );
 
-  const categories = [
-    "Electronics",
-    "Laptops",
-    "Mobile Phones",
-    "Accessories",
-    "Headphones",
-    "Food",
-    "Books",
-    "Clothes/Shoes",
-    "Beauty/Health",
-    "Sports",
-    "Outdoor",
-    "Home",
-  ];
+  const {user : authUser} = useSelector((state) => state.authState);
 
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { id: productId } = useParams();
+  // Populate form when user data is fetched
+  useEffect(() => {
+    if (user?._id) {
+      setName(user.name || "");
+      setEmail(user.email || "");
+      setRole(user.role || "user");
+    }
+  }, [user]);
 
-  const onImagesChange = (e) => {
-    const files = Array.from(e.target.files);
+  // Fetch user
+  useEffect(() => {
+    dispatch(getUser(userId));
+  }, [dispatch, userId]);
 
-    files.forEach((file) => {
-      const reader = new FileReader();
+  // Handle success/error notifications
+  useEffect(() => {
+    if (isUserUpdated) {
+      toast.success("User Updated Successfully", {
+        position: "bottom-center",
+        onOpen: () => dispatch(clearUserUpdated()),
+      });
+      navigate("/admin/users");
+    }
 
-      reader.onload = () => {
-        if (reader.readyState == 2) {
-          setImagesPreview((oldArray) => [...oldArray, reader.result]);
-          setImages((oldArray) => [...oldArray, file]);
-        }
-      };
-
-      reader.readAsDataURL(file);
-    });
-  };
+    if (error) {
+      toast.error(error, {
+        position: "bottom-center",
+        onOpen: () => dispatch(clearError()),
+      });
+    }
+  }, [isUserUpdated, error, dispatch, navigate]);
 
   const submitHandler = (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("name", name);
-    formData.append("price", price);
-    formData.append("stock", stock);
-    formData.append("description", description);
-    formData.append("seller", seller);
-    formData.append("category", category);
-    images.forEach((image) => formData.append("images", image));
-    formData.append("imagesCleared", imagesCleared);
-    dispatch(updateProduct(productId, formData));
+    formData.append("email", email);
+    formData.append("role", role);
+
+    dispatch(updateUser(userId, formData));
   };
-
-  const [pageLoading, setPageLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      dispatch(getProduct(productId));
-      setPageLoading(false);
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, [dispatch, productId]);
-
-  const clearImagesHandler = () => {
-    setImages([]);
-    setImagesPreview([]);
-    setImagesCleared(true);
-  };
-
-  useEffect(() => {
-    if (product._id) {
-      setName(product.name);
-      setPrice(product.price);
-      setStock(product.stock);
-      setDescription(product.description);
-      setSeller(product.seller);
-      setCategory(product.category);
-
-      let images = [];
-      product.images.forEach((image) => {
-        images.push(image.image);
-      });
-      setImagesPreview(images);
-    }
-  }, [product]);
-
-  useEffect(() => {
-    if (isProductUpdated) {
-      toast("Product Updated Successfully", {
-        type: "success",
-        position: "bottom-center",
-        onOpen: () => dispatch(clearProductUpdated()),
-      });
-      setImages([]);
-      navigate('/admin/products')
-      return;
-    }
-    if (error) {
-      toast(error, {
-        position: "bottom-center",
-        type: "error",
-        onOpen: () => {
-          dispatch(clearError());
-        },
-      });
-      return;
-    }
-  }, [isProductUpdated, error, dispatch]);
 
   return (
     <Fragment>
-      <MetaData title={"Admin-New Product"} />
+      <MetaData title="Admin - Update User" />
       <div className="row">
         <div className="col-12 col-md-2">
           <Sidebar />
         </div>
 
-        {pageLoading || loading ? (
+        {loading ? (
           <Loader />
         ) : (
           <div className="col-12 col-md-10">
             <div className="wrapper my-5">
-              <form
-                onSubmit={submitHandler}
-                className="shadow-lg"
-                encType="multipart/form-data"
-              >
-                <h1 className="mb-4">Update Product</h1>
+              <form onSubmit={submitHandler} className="shadow-lg" encType="multipart/form-data">
+                <h1 className="mb-4">Update User</h1>
 
                 <div className="form-group">
                   <label htmlFor="name_field">Name</label>
@@ -161,107 +87,38 @@ const UpdateUser = () => {
                     type="text"
                     id="name_field"
                     className="form-control"
-                    onChange={(e) => setName(e.target.value)}
                     value={name}
+                    onChange={(e) => setName(e.target.value)}
                   />
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="price_field">Price</label>
+                  <label htmlFor="email_field">Email</label>
                   <input
-                    type="text"
-                    id="price_field"
+                    type="email"
+                    id="email_field"
                     className="form-control"
-                    onChange={(e) => setPrice(e.target.value)}
-                    value={price}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="description_field">Description</label>
-                  <textarea
-                    className="form-control"
-                    id="description_field"
-                    rows="8"
-                    onChange={(e) => setDescription(e.target.value)}
-                    value={description}
-                  ></textarea>
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="category_field">Category</label>
+                  <label htmlFor="role_field">Role</label>
                   <select
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
+                  disabled = {user._id === authUser._id}
+                    id="role_field"
                     className="form-control"
-                    id="category_field"
+                    value={role}
+                    onChange={(e) => setRole(e.target.value)}
                   >
-                    <option value="">Select</option>
-                    {categories.map((category) => (
-                      <option key={category} value={category}>
-                        {category}
-                      </option>
-                    ))}
+                    <option value="admin">Admin</option>
+                    <option value="user">User</option>
                   </select>
-                </div>
-                <div className="form-group">
-                  <label htmlFor="stock_field">Stock</label>
-                  <input
-                    type="number"
-                    id="stock_field"
-                    className="form-control"
-                    value={stock}
-                    onChange={(e) => setStock(e.target.value)}
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="seller_field">Seller Name</label>
-                  <input
-                    type="text"
-                    id="seller_field"
-                    className="form-control"
-                    value={seller}
-                    onChange={(e) => setSeller(e.target.value)}
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>Images</label>
-
-                  <div className="custom-file">
-                    <input
-                      type="file"
-                      name="product_images"
-                      className="custom-file-input"
-                      id="customFile"
-                      multiple
-                      onChange={onImagesChange}
-                    />
-                    <label className="custom-file-label" htmlFor="customFile">
-                      Choose Images
-                    </label>
-                  </div>
-
-                  {imagesPreview.length > 0 && (
-                    <span className="mr-2" style={{ cursor: "pointer" }}>
-                      <i className="fa fa-trash"></i>
-                    </span>
-                  )}
-                  {imagesPreview.map((image) => (
-                    <img
-                      className="mt-3 mr-2"
-                      key={image}
-                      src={image}
-                      alt={`Image Preview`}
-                      width="55"
-                      height="52"
-                    />
-                  ))}
                 </div>
 
                 <button
-                  id="login_button"
+                  id="update_button"
                   type="submit"
                   disabled={loading}
                   className="btn btn-block py-3"
