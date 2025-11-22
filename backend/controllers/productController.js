@@ -168,13 +168,21 @@ exports.createReview = catchAsyncError(async (req, res, next) => {
 
 //Get Reviews - api/v1/reviews?id={productId}
 exports.getReviews = catchAsyncError(async (req, res, next) => {
-  const product = await Product.findById(req.query.id);
+  const productId = req.query.id;
+
+  const product = await Product.findById(productId)
+    .populate('reviews.user', 'name email');
+
+  if (!product) {
+    return next(new ErrorHandler("Product not found", 404));
+  }
 
   res.status(200).json({
     success: true,
     reviews: product.reviews,
   });
 });
+
 
 //Delete Review - api/v1/review
 exports.deleteReview = catchAsyncError(async (req, res, next) => {
