@@ -110,7 +110,9 @@ const ConfirmOrder = () => {
             </p>
 
             <hr />
-            <button onClick={processPayment} id="checkout_btn" className="btn btn-primary btn-block">
+            <button onClick={processPayment} id="checkout_btn" className="btn btn-primary btn-block" style={{
+            background: "#d7263d",
+          }}>
               Proceed to Payment
             </button>
           </div>

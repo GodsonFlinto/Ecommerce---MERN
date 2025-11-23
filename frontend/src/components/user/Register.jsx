@@ -146,6 +146,9 @@ const Register = () => {
             </div>
 
             <button
+            style={{
+            background: "#d7263d",
+          }}
               id="register_button"
               type="submit"
               className="btn btn-block py-3"

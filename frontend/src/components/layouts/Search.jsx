@@ -1,11 +1,9 @@
-import React from "react";
-import { useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const Search = () => {
   const navigate = useNavigate();
-  const location = useLocation()
+  const location = useLocation();
   const [keyword, setKeyword] = useState("");
 
   const searchHandler = (e) => {
@@ -13,34 +11,51 @@ const Search = () => {
     navigate(`/search/${keyword}`);
   };
 
-  const clearKeyword = () => {
-    setKeyword("");
-  };
-
-  useEffect(()=>{
-    if(location.pathname === '/'){
-        clearKeyword()
-    }
-  },[location])
+  useEffect(() => {
+    if (location.pathname === "/") setKeyword("");
+  }, [location]);
 
   return (
-    <form onSubmit={searchHandler}>
-      <div className="input-group">
+    <form onSubmit={searchHandler} style={{ width: "90%" }}>
+      <div
+        style={{
+          display: "flex",
+          width: "100%",
+          background: "white",
+          borderRadius: "50px",
+          padding: "3px",
+          overflow: "hidden",
+          border: "1px solid #ccc",
+        }}
+      >
         <input
           type="text"
-          id="search_field"
-          className="form-control"
-          placeholder="Enter Product Name ..."
+          placeholder="Search products..."
           value={keyword}
-          onChange={(e) => {
-            setKeyword(e.target.value);
+          onChange={(e) => setKeyword(e.target.value)}
+          style={{
+            flex: 1,
+            border: "none",
+            outline: "none",
+            fontSize: "15px",
+            padding: "10px 15px",
+            borderRadius: "50px",
           }}
         />
-        <div className="input-group-append">
-          <button id="search_btn" className="btn">
-            <i className="fa fa-search" aria-hidden="true"></i>
-          </button>
-        </div>
+
+        <button
+          style={{
+            background: "#d7263d",
+            border: "none",
+            color: "white",
+            padding: "10px 18px",
+            fontSize: "16px",
+            borderRadius: "100px",
+            cursor: "pointer",
+          }}
+        >
+          <i className="fa fa-search"></i>
+        </button>
       </div>
     </form>
   );

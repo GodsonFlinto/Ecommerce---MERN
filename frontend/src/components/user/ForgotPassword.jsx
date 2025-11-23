@@ -60,6 +60,9 @@ const ForgotPassword = () => {
             </div>
 
             <button
+            style={{
+            background: "#d7263d",
+          }}
               id="forgot_password_button"
               type="submit"
               className="btn btn-block py-3"

@@ -58,7 +58,7 @@ const ReviewList = () => {
       key: "actions",
       render: (_, review) => (
         <>
-          <Button danger onClick={(e) => deleteHandler(e, review._id)}>
+          <Button onClick={(e) => deleteHandler(e, review._id)}>
             <i className="fa fa-trash" />
           </Button>
         </>
@@ -81,7 +81,7 @@ const ReviewList = () => {
         position: "bottom-center",
         onOpen: () => dispatch(clearError()),
       });
-      return
+      return;
     }
 
     if (isReviewDeleted) {
@@ -90,7 +90,7 @@ const ReviewList = () => {
         onOpen: () => dispatch(clearReviewDeleted()),
       });
       dispatch(getReviews(productId));
-      return
+      return;
     }
   }, [dispatch, error, isReviewDeleted]);
 
@@ -123,9 +123,15 @@ const ReviewList = () => {
                       />
                     </div>
                     <button
+                      style={{
+                        background: "#d7263d",
+                        borderRadius: "50px",
+                        width: "50%",
+                        marginLeft: "25%",
+                      }}
                       type="submit"
                       disabled={loading}
-                      className="btn btn-primary btn-block py-2"
+                      className="btn btn-danger btn-block py-2"
                     >
                       Get Reviews
                     </button>
@@ -143,6 +149,17 @@ const ReviewList = () => {
                   onSearch={(value) => setSearch(value)}
                   onChange={(e) => setSearch(e.target.value)}
                 />
+
+                <style>{`
+    .ant-input-search-button {
+      background-color: #dc3545 !important;
+      border-color: #dc3545 !important;
+    }
+    .ant-input-search-button:hover {
+      background-color: #c82333 !important;
+      border-color: #bd2130 !important;
+    }
+  `}</style>
 
                 <Table
                   columns={columns}

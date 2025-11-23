@@ -107,6 +107,12 @@ const ProductDetail = () => {
       ) : (
         <Fragment>
           <MetaData title={product.name} />
+          <style>{`
+  #product_image .slick-prev:before,
+  #product_image .slick-next:before {
+    color: black;
+  }
+`}</style>
           <div className="row f-flex justify-content-around">
             <div className="col-12 col-lg-5 img-fluid" id="product_image">
               <Slider {...settings}>
@@ -162,6 +168,9 @@ const ProductDetail = () => {
                 </span>
               </div>
               <button
+                style={{
+                  background: "#d7263d",
+                }}
                 type="button"
                 id="cart_btn"
                 disabled={product.stock == 0 ? true : false}
@@ -200,6 +209,9 @@ const ProductDetail = () => {
 
               {user ? (
                 <button
+                  style={{
+                    background: "#d7263d",
+                  }}
                   id="review_btn"
                   type="button"
                   className="btn btn-primary mt-4"

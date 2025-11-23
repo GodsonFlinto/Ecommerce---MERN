@@ -122,6 +122,9 @@ const Shipping = () => {
             </div>
 
             <button
+            style={{
+            background: "#d7263d",
+          }}
               id="shipping_btn"
               type="submit"
               className="btn btn-block py-3"

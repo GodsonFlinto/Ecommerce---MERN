@@ -11,7 +11,7 @@ import { HelmetProvider } from "react-helmet-async";
 import ProductSearch from "./components/product/ProductSearch";
 import Login from "./components/user/login";
 import Register from "./components/user/Register";
-import store from './store'
+import store from './store';
 import { loadUser } from "./actions/userActions";
 import Profile from "./components/user/Profile";
 import ProtectedRoute from "./components/route/ProtectedRoute";
@@ -23,7 +23,7 @@ import Cart from "./components/cart/Cart";
 import Shipping from "./components/cart/Shipping";
 import ConfirmOrder from "./components/cart/ConfirmOrder";
 import Payment from "./components/cart/Payment";
-import {Elements} from '@stripe/react-stripe-js'
+import {Elements} from '@stripe/react-stripe-js';
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 import OrderSuccess from "./components/cart/OrderSuccess";
@@ -40,67 +40,248 @@ import UpdateUser from "./components/admin/UpdateUser";
 import ReviewList from "./components/admin/ReviewList";
 
 function App() {
-  const [stripeApiKey, setStripeApiKey] = useState("")
+  const [stripeApiKey, setStripeApiKey] = useState("");
 
-  useEffect(()=>{
-    store.dispatch(loadUser)
+  useEffect(() => {
+    store.dispatch(loadUser);
+
     async function getStripeApiKey() {
-      const {data} = await axios.get('/api/v1/stripeapi')
-      setStripeApiKey(data.stripeApiKey)
+      const { data } = await axios.get('/api/v1/stripeapi');
+      setStripeApiKey(data.stripeApiKey);
     }
-    getStripeApiKey()
-  },[])
+    getStripeApiKey();
+  }, []);
 
   return (
-    <>
-      <Router>
-        <div className="app">
-          <HelmetProvider>
-            <Header />
-            <div className="container container-fluid">
-              <ToastContainer theme="dark" />
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/product/:id" element={<ProductDetail />} />
-                <Route path="/search/:keyword" element={<ProductSearch />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/myprofile" element={<ProtectedRoute><Profile/></ProtectedRoute>}/>
-                <Route path="/myprofile/update" element={<UpdateProfile/>}/>
-                <Route path="/myprofile/update/password" element={<ProtectedRoute> <UpdatePassword/> </ProtectedRoute>}/>
-                <Route path="/password/forgot" element={<ForgotPassword/>}/>
-                <Route path="/password/reset/:token" element={<ResetPassword/>}/>
-                <Route path="/cart" element={<Cart/>} />
-                <Route path="/shipping" element={<ProtectedRoute><Shipping/></ProtectedRoute>} />
-                <Route path="/order/confirm" element={<ProtectedRoute> <ConfirmOrder/> </ProtectedRoute>} />
-                
-                { stripeApiKey &&      
-                <Route path="/payment" element={<ProtectedRoute> <Elements stripe={loadStripe(stripeApiKey)} > <Payment/> </Elements> </ProtectedRoute>} />
-                }
-                <Route path="/order/success" element={<ProtectedRoute> <OrderSuccess /> </ProtectedRoute>} />
-                <Route path="/orders" element={<ProtectedRoute> <UserOrders /> </ProtectedRoute>} />
-                <Route path="/order/:id" element={<ProtectedRoute> <OrderDetail /> </ProtectedRoute>} />
+    <Router>
+      <div className="app">
+        <HelmetProvider>
 
-              </Routes>
-            </div>
-            
-            {/* Admin Routes */}
-            <Routes>
-                <Route path="/admin/dashboard" element={ <ProtectedRoute isAdmin={true}> <Dashboard/> </ProtectedRoute>} />
-                <Route path="/admin/products" element={ <ProtectedRoute isAdmin={true}> <ProductList/> </ProtectedRoute>} />
-                <Route path="/admin/products/create" element={ <ProtectedRoute isAdmin={true}> <NewProduct /> </ProtectedRoute>} />
-                <Route path="/admin/product/:id" element={ <ProtectedRoute isAdmin={true}> <UpdateProduct /> </ProtectedRoute>} />
-                <Route path="/admin/orders" element={ <ProtectedRoute isAdmin={true}> <OrderList/> </ProtectedRoute>} />
-                <Route path="/admin/order/:id" element={ <ProtectedRoute isAdmin={true}> <UpdateOrder /> </ProtectedRoute>} />
-                <Route path="/admin/users" element={ <ProtectedRoute isAdmin={true}> <UserList/> </ProtectedRoute>} />
-                <Route path="/admin/user/:id" element={ <ProtectedRoute isAdmin={true}> <UpdateUser /> </ProtectedRoute>} />
-                <Route path="/admin/reviews" element={ <ProtectedRoute isAdmin={true}> <ReviewList/> </ProtectedRoute>} />
-            </Routes>
-            <Footer />
-          </HelmetProvider>
-        </div>
-      </Router>
-    </>
+          <Header />
+          <ToastContainer theme="dark" />
+
+          {/* ALL ROUTES IN ONE PLACE */}
+          <Routes>
+
+            {/* USER ROUTES INSIDE CONTAINER */}
+            <Route
+              path="/"
+              element={
+                <div className="container container-fluid">
+                  <Home />
+                </div>
+              }
+            />
+
+            <Route
+              path="/product/:id"
+              element={
+                <div className="container container-fluid">
+                  <ProductDetail />
+                </div>
+              }
+            />
+
+            <Route
+              path="/search/:keyword"
+              element={
+                <div className="container container-fluid">
+                  <ProductSearch />
+                </div>
+              }
+            />
+
+            <Route
+              path="/login"
+              element={
+                <div className="container container-fluid">
+                  <Login />
+                </div>
+              }
+            />
+
+            <Route
+              path="/register"
+              element={
+                <div className="container container-fluid">
+                  <Register />
+                </div>
+              }
+            />
+
+            <Route
+              path="/myprofile"
+              element={
+                <div className="container container-fluid">
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                </div>
+              }
+            />
+
+            <Route
+              path="/myprofile/update"
+              element={
+                <div className="container container-fluid">
+                  <UpdateProfile />
+                </div>
+              }
+            />
+
+            <Route
+              path="/myprofile/update/password"
+              element={
+                <div className="container container-fluid">
+                  <ProtectedRoute>
+                    <UpdatePassword />
+                  </ProtectedRoute>
+                </div>
+              }
+            />
+
+            <Route
+              path="/password/forgot"
+              element={
+                <div className="container container-fluid">
+                  <ForgotPassword />
+                </div>
+              }
+            />
+
+            <Route
+              path="/password/reset/:token"
+              element={
+                <div className="container container-fluid">
+                  <ResetPassword />
+                </div>
+              }
+            />
+
+            <Route
+              path="/cart"
+              element={
+                <div className="container container-fluid">
+                  <Cart />
+                </div>
+              }
+            />
+
+            <Route
+              path="/shipping"
+              element={
+                <div className="container container-fluid">
+                  <ProtectedRoute>
+                    <Shipping />
+                  </ProtectedRoute>
+                </div>
+              }
+            />
+
+            <Route
+              path="/order/confirm"
+              element={
+                <div className="container container-fluid">
+                  <ProtectedRoute>
+                    <ConfirmOrder />
+                  </ProtectedRoute>
+                </div>
+              }
+            />
+
+            {stripeApiKey && (
+              <Route
+                path="/payment"
+                element={
+                  <div className="container container-fluid">
+                    <ProtectedRoute>
+                      <Elements stripe={loadStripe(stripeApiKey)}>
+                        <Payment />
+                      </Elements>
+                    </ProtectedRoute>
+                  </div>
+                }
+              />
+            )}
+
+            <Route
+              path="/order/success"
+              element={
+                <div className="container container-fluid">
+                  <ProtectedRoute>
+                    <OrderSuccess />
+                  </ProtectedRoute>
+                </div>
+              }
+            />
+
+            <Route
+              path="/orders"
+              element={
+                <div className="container container-fluid">
+                  <ProtectedRoute>
+                    <UserOrders />
+                  </ProtectedRoute>
+                </div>
+              }
+            />
+
+            <Route
+              path="/order/:id"
+              element={
+                <div className="container container-fluid">
+                  <ProtectedRoute>
+                    <OrderDetail />
+                  </ProtectedRoute>
+                </div>
+              }
+            />
+
+            {/* -------------------- ADMIN ROUTES -------------------- */}
+
+            <Route path="/admin/dashboard"
+              element={<ProtectedRoute isAdmin={true}><Dashboard /></ProtectedRoute>}
+            />
+
+            <Route path="/admin/products"
+              element={<ProtectedRoute isAdmin={true}><ProductList /></ProtectedRoute>}
+            />
+
+            <Route path="/admin/products/create"
+              element={<ProtectedRoute isAdmin={true}><NewProduct /></ProtectedRoute>}
+            />
+
+            <Route path="/admin/product/:id"
+              element={<ProtectedRoute isAdmin={true}><UpdateProduct /></ProtectedRoute>}
+            />
+
+            <Route path="/admin/orders"
+              element={<ProtectedRoute isAdmin={true}><OrderList /></ProtectedRoute>}
+            />
+
+            <Route path="/admin/order/:id"
+              element={<ProtectedRoute isAdmin={true}><UpdateOrder /></ProtectedRoute>}
+            />
+
+            <Route path="/admin/users"
+              element={<ProtectedRoute isAdmin={true}><UserList /></ProtectedRoute>}
+            />
+
+            <Route path="/admin/user/:id"
+              element={<ProtectedRoute isAdmin={true}><UpdateUser /></ProtectedRoute>}
+            />
+
+            <Route path="/admin/reviews"
+              element={<ProtectedRoute isAdmin={true}><ReviewList /></ProtectedRoute>}
+            />
+
+          </Routes>
+
+          <Footer />
+
+        </HelmetProvider>
+      </div>
+    </Router>
   );
 }
 

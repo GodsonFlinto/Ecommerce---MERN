@@ -27,12 +27,12 @@ const Cart = () => {
   };
 
   const checkoutHandler = () => {
-    navigate('/login?redirect=shipping')
+    navigate("/login?redirect=shipping");
   };
 
   return (
     <Fragment>
-        <MetaData title={`Cart`} />
+      <MetaData title={`Cart`} />
       {items.length == 0 ? (
         <h2 className="mt-5">Your Cart is Empty</h2>
       ) : (
@@ -127,7 +127,14 @@ const Cart = () => {
                 </p>
 
                 <hr />
-                <button id="checkout_btn" className="btn btn-primary btn-block" onClick={checkoutHandler}>
+                <button
+                  id="checkout_btn"
+                  className="btn btn-primary btn-block"
+                  onClick={checkoutHandler}
+                  style={{
+                    background: "#d7263d",
+                  }}
+                >
                   Check out
                 </button>
               </div>

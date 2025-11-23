@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import { Fragment, useEffect } from "react";
 import { getProducts } from "../actions/productsActions";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "./layouts/Loader";
@@ -47,7 +47,29 @@ const Home = () => {
             </div>
           </section>
           {productsCount > 0 && productsCount > resPerPage ? (
-            <div className="d-flex justify-content-center mt-5">
+            <div
+              className="d-flex justify-content-center mt-5"
+              style={{
+                "--pagination-color": "#dc3545",
+                "--pagination-hover-bg": "#dc3545",
+                "--pagination-active-bg": "#dc3545",
+              }}
+            >
+              <style>{`
+    .pagination .page-link {
+      color: #dc3545;
+    }
+    .pagination .page-link:hover {
+      background-color: #dc3545;
+      border-color: #dc3545;
+      color: white;
+    }
+    .pagination .active .page-link {
+      background-color: #dc3545;
+      border-color: #dc3545;
+    }
+  `}</style>
+
               <ReactPaginate
                 previousLabel={"Prev"}
                 nextLabel={"Next"}
@@ -66,7 +88,7 @@ const Home = () => {
                 breakClassName={"page-item"}
                 breakLinkClassName={"page-link"}
                 activeClassName={"active"}
-                forcePage={currentPage - 1} // syncs current page with state
+                forcePage={currentPage - 1}
               />
             </div>
           ) : null}

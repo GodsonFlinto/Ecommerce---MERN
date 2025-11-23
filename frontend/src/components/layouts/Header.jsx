@@ -46,7 +46,7 @@ const Header = () => {
                 <span>{user.name}</span>
               </Dropdown.Toggle>
               <Dropdown.Menu>
-                {user.role === 'admin' && (
+                {user.role === "admin" && (
                   <Dropdown.Item
                     onClick={() => {
                       navigate("/admin/dashboard");
@@ -79,7 +79,14 @@ const Header = () => {
             </Dropdown>
           ) : (
             <Link to="/login">
-              <button className="btn" id="login_btn">
+              <button
+                style={{
+                  background: "#d7263d",
+                  color: "white",
+                }}
+                className="btn"
+                id="login_btn"
+              >
                 Login
               </button>
             </Link>
@@ -91,7 +98,10 @@ const Header = () => {
               Cart
             </span>{" "}
           </Link>
-          <span className="ml-1" id="cart_count">
+          <span className="ml-1" id="cart_count" style={{
+            background: "#d7263d",
+            color: "white",
+          }}>
             {cartItems.length}
           </span>
         </div>

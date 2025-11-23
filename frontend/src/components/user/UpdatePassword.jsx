@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   clearAuthError,
   updatePassword as updatePasswordAction,
 } from "../../actions/userActions";
 import { toast } from "react-toastify";
+import MetaData from "../layouts/MetaData";
 
 const UpdatePassword = () => {
   const { isUpdated, error } = useSelector((state) => state.authState);
@@ -64,7 +65,6 @@ const UpdatePassword = () => {
                 autoComplete="current-password"
                 value={oldPassword}
                 onChange={(e) => setOldPassword(e.target.value)}
-                hidden
               />
             </div>
 
@@ -82,6 +82,9 @@ const UpdatePassword = () => {
             </div>
 
             <button
+            style={{
+            background: "#d7263d",
+          }}
               type="submit"
               className="btn update-btn btn-block mt-4 mb-3"
             >

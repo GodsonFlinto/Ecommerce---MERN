@@ -7,16 +7,22 @@ import { toast } from "react-toastify";
 import { Table, Button, Input } from "antd";
 import { Link } from "react-router-dom";
 
-import { adminOrders as adminOrdersAction, deleteOrder } from "../../actions/orderActions";
+import {
+  adminOrders as adminOrdersAction,
+  deleteOrder,
+} from "../../actions/orderActions";
 import { clearError, clearOrderDeleted } from "../../slices/orderSlice";
 
 const OrderList = () => {
   const dispatch = useDispatch();
   const [search, setSearch] = useState("");
 
-  const { adminOrders = [], loading = true, error, isOrderDeleted } = useSelector(
-    (state) => state.orderState
-  );
+  const {
+    adminOrders = [],
+    loading = true,
+    error,
+    isOrderDeleted,
+  } = useSelector((state) => state.orderState);
 
   // Delete order handler
   const deleteHandler = (e, id) => {
@@ -59,12 +65,15 @@ const OrderList = () => {
       render: (_, order) => (
         <>
           <Link to={`/admin/order/${order._id}`}>
-            <Button type="primary" style={{ marginRight: 8 }}>
+            <Button
+              type="primary"
+              style={{ marginRight: 8, background: "#d7263d" }}
+            >
               <i className="fa fa-eye" />
             </Button>
           </Link>
 
-          <Button danger onClick={(e) => deleteHandler(e, order._id)}>
+          <Button onClick={(e) => deleteHandler(e, order._id)}>
             <i className="fa fa-trash" />
           </Button>
         </>
@@ -82,11 +91,17 @@ const OrderList = () => {
   // Fetch orders & handle errors/deletion
   useEffect(() => {
     if (error) {
-      toast.error(error, { position: "bottom-center", onOpen: () => dispatch(clearError()) });
+      toast.error(error, {
+        position: "bottom-center",
+        onOpen: () => dispatch(clearError()),
+      });
     }
 
     if (isOrderDeleted) {
-      toast.success("Order Deleted Successfully", { position: "bottom-center", onOpen: () => dispatch(clearOrderDeleted()) });
+      toast.success("Order Deleted Successfully", {
+        position: "bottom-center",
+        onOpen: () => dispatch(clearOrderDeleted()),
+      });
     }
 
     dispatch(adminOrdersAction());
@@ -118,6 +133,16 @@ const OrderList = () => {
                 onSearch={(value) => setSearch(value)}
                 onChange={(e) => setSearch(e.target.value)}
               />
+              <style>{`
+    .ant-input-search-button {
+      background-color: #dc3545 !important;
+      border-color: #dc3545 !important;
+    }
+    .ant-input-search-button:hover {
+      background-color: #c82333 !important;
+      border-color: #bd2130 !important;
+    }
+  `}</style>
 
               <Table
                 columns={columns}

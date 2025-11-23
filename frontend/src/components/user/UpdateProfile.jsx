@@ -141,6 +141,9 @@ const UpdateProfile = () => {
             </div>
 
             <button
+            style={{
+            background: "#d7263d",
+          }}
               type="submit"
               className="btn update-btn btn-block mt-4 mb-3"
             >

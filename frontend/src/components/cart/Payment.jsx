@@ -33,7 +33,7 @@ const Payment = () => {
   const { error: orderError } = useSelector((state) => state.orderState);
 
   const paymentData = {
-    amount: Math.round(orderInfo.totalPrice * 100),
+    amount: Math.round(orderInfo?.totalPrice * 100),
     shipping: {
       name: user.name,
       address: {
@@ -158,8 +158,10 @@ const Payment = () => {
               />
             </div>
 
-            <button id="pay_btn" type="submit" className="btn btn-block py-3">
-              Pay {` $${orderInfo && orderInfo.totalPrice} `}
+            <button id="pay_btn" type="submit" className="btn btn-block py-3" style={{
+            background: "#d7263d",
+          }}>
+              Pay {` $${orderInfo && orderInfo?.totalPrice} `}
             </button>
           </form>
         </div>

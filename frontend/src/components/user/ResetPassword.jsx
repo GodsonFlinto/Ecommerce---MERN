@@ -73,6 +73,9 @@ const ResetPassword = () => {
           </div>
 
           <button
+          style={{
+            background: "#d7263d",
+          }}
             id="new_password_button"
             type="submit"
             className="btn btn-block py-3"

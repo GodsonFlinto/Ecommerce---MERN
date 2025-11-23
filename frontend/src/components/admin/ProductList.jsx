@@ -47,16 +47,18 @@ const ProductList = () => {
       key: "actions",
       render: (_, product) => (
         <Fragment>
-          <Link
-            to={`/admin/product/${product._id}`}
-            className="btn btn-primary"
-          >
-            <i className="fa fa-pencil"></i>
-          </Link>
-
-          <Button onClick={e => deleteHandler(e, product._id)} className="btn btn-danger ml-2">
-            <i className="fa fa-trash"></i>
-          </Button>
+          <Link to={`/admin/user/${product._id}`}>
+                      <Button type="primary" style={{ marginRight: 8, background: "#d7263d" }} >
+                        <i className="fa fa-eye" />
+                      </Button>
+                    </Link>
+          
+                    <Button
+                      
+                      onClick={(e) => deleteHandler(e, product._id)}
+                    >
+                      <i className="fa fa-trash" />
+                    </Button>
         </Fragment>
       ),
     },
@@ -118,6 +120,16 @@ const ProductList = () => {
                 onSearch={(value) => setSearch(value)}
                 onChange={(e) => setSearch(e.target.value)}
               />
+              <style>{`
+    .ant-input-search-button {
+      background-color: #dc3545 !important;
+      border-color: #dc3545 !important;
+    }
+    .ant-input-search-button:hover {
+      background-color: #c82333 !important;
+      border-color: #bd2130 !important;
+    }
+  `}</style>
 
               <Table
                 columns={columns}

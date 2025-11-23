@@ -52,13 +52,12 @@ const UserList = () => {
       render: (_, user) => (
         <>
           <Link to={`/admin/user/${user._id}`}>
-            <Button type="primary" style={{ marginRight: 8 }}>
+            <Button type="primary" style={{ marginRight: 8, background: "#d7263d" }}>
               <i className="fa fa-eye" />
             </Button>
           </Link>
 
           <Button
-            danger
             onClick={(e) => deleteHandler(e, user._id)}
           >
             <i className="fa fa-trash" />
@@ -121,6 +120,16 @@ const UserList = () => {
                 onSearch={(value) => setSearch(value)}
                 onChange={(e) => setSearch(e.target.value)}
               />
+              <style>{`
+    .ant-input-search-button {
+      background-color: #dc3545 !important;
+      border-color: #dc3545 !important;
+    }
+    .ant-input-search-button:hover {
+      background-color: #c82333 !important;
+      border-color: #bd2130 !important;
+    }
+  `}</style>
 
               <Table
                 columns={columns}
