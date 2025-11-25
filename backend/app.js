@@ -32,7 +32,7 @@ if (process.env.NODE_ENV === 'production') {
 
   // ❗ FIXED — remove app.get('*'), use fallback middleware
   app.use((req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+    res.sendFile(path.resolve(__dirname, '../frontend/dist/index.html'));
   });
 }
 
