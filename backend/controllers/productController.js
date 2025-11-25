@@ -30,16 +30,21 @@ exports.getProducts = async (req, res, next) => {
 
 //Create Product = /api/v1/product/new
 exports.newProduct = catchAsyncError(async (req, res) => {
-  let images = []
+  let images = [];
 
-  if(req.files.length>0){
-    req.files.forEach(file => {
-      let url = `${process.env.BACKEND_URL}/uploads/product/${file.originalname}`
-      images.push({ image: url })
-    })
+  let BASE_URL = "process.env.BACKEND_URL";
+  if (process.env.NODE_ENV === "production") {
+    BASE_URL = `${req.protocol}://${req.get("host")}`;
   }
 
-  req.body.images = images
+  if (req.files.length > 0) {
+    req.files.forEach((file) => {
+      let url = `${BASE_URL}/uploads/product/${file.originalname}`;
+      images.push({ image: url });
+    });
+  }
+
+  req.body.images = images;
 
   req.body.user = req.user.id;
   const product = await Product.create(req.body);
@@ -51,7 +56,10 @@ exports.newProduct = catchAsyncError(async (req, res) => {
 
 //Get Single Product - /api/v1/product/:id
 exports.getSingleProduct = async (req, res, next) => {
-  const product = await Product.findById(req.params.id).populate('reviews.user', 'name email');
+  const product = await Product.findById(req.params.id).populate(
+    "reviews.user",
+    "name email"
+  );
   if (!product) {
     return next(new ErrorHandler("Product not found", 400));
   }
@@ -67,21 +75,26 @@ exports.updateProduct = async (req, res) => {
   let product = await Product.findById(req.params.id);
 
   //uploading images
-  let images = []
+  let images = [];
 
   //if images not cleared we keep existing images
-  if(req.body.imagesCleared === 'false'){
-    images = product.images
+  if (req.body.imagesCleared === "false") {
+    images = product.images;
   }
 
-  if(req.files.length>0){
-    req.files.forEach(file => {
-      let url = `${process.env.BACKEND_URL}/uploads/product/${file.originalname}`
-      images.push({ image: url })
-    })
+  let BASE_URL = "process.env.BACKEND_URL";
+  if (process.env.NODE_ENV === "production") {
+    BASE_URL = `${req.protocol}://${req.get("host")}`;
   }
 
-  req.body.images = images
+  if (req.files.length > 0) {
+    req.files.forEach((file) => {
+      let url = `${BASE_URL}/uploads/product/${file.originalname}`;
+      images.push({ image: url });
+    });
+  }
+
+  req.body.images = images;
 
   if (!product) {
     return res.status(404).json({
@@ -170,8 +183,10 @@ exports.createReview = catchAsyncError(async (req, res, next) => {
 exports.getReviews = catchAsyncError(async (req, res, next) => {
   const productId = req.query.id;
 
-  const product = await Product.findById(productId)
-    .populate('reviews.user', 'name email');
+  const product = await Product.findById(productId).populate(
+    "reviews.user",
+    "name email"
+  );
 
   if (!product) {
     return next(new ErrorHandler("Product not found", 404));
@@ -182,7 +197,6 @@ exports.getReviews = catchAsyncError(async (req, res, next) => {
     reviews: product.reviews,
   });
 });
-
 
 //Delete Review - api/v1/review
 exports.deleteReview = catchAsyncError(async (req, res, next) => {
@@ -215,12 +229,11 @@ exports.deleteReview = catchAsyncError(async (req, res, next) => {
   });
 });
 
-
 //get admin products - api/v1/admin/products
-exports.getAdminProducts = catchAsyncError(async (req, res, next)=>{
-  const products = await Product.find()
+exports.getAdminProducts = catchAsyncError(async (req, res, next) => {
+  const products = await Product.find();
   res.status(200).send({
-    success : true,
-    products
-  })
-})
+    success: true,
+    products,
+  });
+});
